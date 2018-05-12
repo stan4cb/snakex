@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class SnakeX extends ApplicationAdapter {
 	OrthographicCamera cam;
+	float dt = 0;
 
 	SpriteBatch batch;
 	Texture img;
@@ -29,19 +30,35 @@ public class SnakeX extends ApplicationAdapter {
 	}
 
 	@Override
+	public void resize(int width, int height) {
+		super.resize(width, height);
+
+		cam.update();
+	}
+
+	@Override
 	public void render () {
-		player_1.update();
+		dt += Gdx.graphics.getDeltaTime();
+
+		if(dt > (1f / 30f /* 30 fps */)) {
+			dt = 0;
+
+			update();
+		}
 
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		cam.update();
 
 		batch.begin();
 		batch.draw(img, 0, 0);
 		batch.end();
 
 		player_1.draw_self(snake_renderer);
+	}
+
+	void update() {
+		player_1.update();
 	}
 	
 	@Override

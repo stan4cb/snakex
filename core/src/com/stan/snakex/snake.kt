@@ -8,25 +8,29 @@ import com.badlogic.gdx.math.Vector2
 class Snake constructor(p_id: Int) {
     var player_id = p_id
 
-    var position = Vector2(1280f / 2,720f / 2)
+    var look_rotation = 0
+    var past_rotations = MutableList(0) {}
 
-    var size = 4
+    var head = Vector2(1280f / 2,720f / 2)
+    var tail_size = 4
+
+    var speed = 2.4f
 
     fun draw_self(r: ShapeRenderer) {
+        var rest_of_snake = 0
+
         r.begin(ShapeRenderer.ShapeType.Filled)
 
         r.color = Color.GREEN
-        r.circle(position.x,position.y, 20f)
+        r.circle(head.x,head.y, 20f)
 
         r.color = Color.RED
-
-        var rest_of_snake = 0
-        while (rest_of_snake < size) {
+        while (rest_of_snake < tail_size) {
             rest_of_snake++
 
-            var offset = rest_of_snake * 22
+            var offset = rest_of_snake * 20
 
-            r.circle(position.x - offset,position.y - offset, 20f)
+            r.circle(head.x - offset, head.y, 18f)
         }
 
         r.end()
@@ -37,9 +41,14 @@ class Snake constructor(p_id: Int) {
             var x = Gdx.input.getX()
 
             if (x > (1280 / 2))
-                position = Vector2( position.x + 1f,position.y + 0f)
+                look_rotation = 0
             else
-                position = Vector2( position.x - 1f,position.y + 0f)
+                look_rotation = 1
         }
+
+        if (look_rotation == 0)
+            head.add(speed,0f)
+        if (look_rotation == 1)
+            head.add(-speed,0f)
     }
 }
